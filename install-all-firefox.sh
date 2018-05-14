@@ -1,14 +1,15 @@
 #!/bin/bash
-default_versions_current="53"
+default_versions_current="60"
 
 past_00s="2 3 3.5 3.6 4 5 6 7 8 9"
 past_10s="10 11 12 13 14 15 16 17 18 19"
 past_20s="20 21 22 23 24 25 26 27 28 29"
 past_30s="30 31 32 33 34 35 36 37 38 39"
 past_40s="40 41 42 43 44 45 46 47 48 49"
-past_50s="50 51 52"
+past_50s="50 51 52 53 54 55 56 57 58 59"
+past_60s=""
 
-default_versions_past="${past_00s} ${past_10s} ${past_20s} ${past_30s} ${past_40s} ${past_50s}"
+default_versions_past="${past_00s} ${past_10s} ${past_20s} ${past_30s} ${past_40s} ${past_50s} ${past_60s}"
 
 # Using data from http://gs.statcounter.com/
 versions_usage_point_one="43 44 45 46 50"
@@ -18,7 +19,7 @@ versions_usage_point_four_up="47 48"
 
 default_versions="${default_versions_past} ${default_versions_current}"
 tmp_directory="/tmp/firefoxes/"
-bits_host="https://raw.githubusercontent.com/omgmog/install-all-firefox/master/bits/"
+bits_host="https://raw.githubusercontent.com/jgornick/install-all-firefox/master/bits/"
 bits_directory="${tmp_directory}bits/"
 dmg_host="http://ftp.mozilla.org/pub/mozilla.org/firefox/"
 
@@ -868,6 +869,83 @@ get_associated_information(){
             binary="firefox"
             short_name="fx53"
             nice_name="Firefox 53.0"
+
+            uses_v2_signing=true
+        ;;
+        54 | 54.0 | 54.0.1)
+            release_directory="54.0.1"
+            dmg_file="Firefox 54.0.1.dmg"
+            sum_file="MD5SUMS"
+            sum_file_type="md5"
+            binary="firefox"
+            short_name="fx54"
+            nice_name="Firefox 54.0"
+
+            uses_v2_signing=true
+        ;;
+        55 | 55.0 | 55.0.3)
+            release_directory="55.0.3"
+            dmg_file="Firefox 55.0.3.dmg"
+            sum_file="MD5SUMS"
+            sum_file_type="md5"
+            binary="firefox"
+            short_name="fx55"
+            nice_name="Firefox 55.0"
+
+            uses_v2_signing=true
+        ;;
+        56 | 56.0 | 56.0.2)
+            release_directory="56.0.2"
+            dmg_file="Firefox 56.0.2.dmg"
+            sum_file="MD5SUMS"
+            sum_file_type="md5"
+            binary="firefox"
+            short_name="fx56"
+            nice_name="Firefox 56.0"
+
+            uses_v2_signing=true
+        ;;
+        57 | 57.0 | 57.0.4)
+            release_directory="57.0.4"
+            dmg_file="Firefox 57.0.4.dmg"
+            sum_file="MD5SUMS"
+            sum_file_type="md5"
+            binary="firefox"
+            short_name="fx57"
+            nice_name="Firefox 57.0"
+
+            uses_v2_signing=true
+        ;;
+        58 | 58.0 | 58.0.2)
+            release_directory="58.0.2"
+            dmg_file="Firefox 58.0.2.dmg"
+            sum_file="MD5SUMS"
+            sum_file_type="md5"
+            binary="firefox"
+            short_name="fx58"
+            nice_name="Firefox 58.0"
+
+            uses_v2_signing=true
+        ;;
+        59 | 59.0 | 59.0.3)
+            release_directory="59.0.3"
+            dmg_file="Firefox 59.0.3.dmg"
+            sum_file="MD5SUMS"
+            sum_file_type="md5"
+            binary="firefox"
+            short_name="fx59"
+            nice_name="Firefox 59.0"
+
+            uses_v2_signing=true
+        ;;
+        60 | 60.0)
+            release_directory="60.0"
+            dmg_file="Firefox 60.0.dmg"
+            sum_file="MD5SUMS"
+            sum_file_type="md5"
+            binary="firefox"
+            short_name="fx60"
+            nice_name="Firefox 60.0"
 
             uses_v2_signing=true
         ;;
