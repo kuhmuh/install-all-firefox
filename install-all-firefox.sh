@@ -1,6 +1,9 @@
 #!/bin/bash
 default_versions_current="61"
 
+# to add new versions: add it to past_xxs string and add it to the all_version array
+# array structure is <exact version> ""
+
 past_00s="2 3 3.5 3.6 4 5 6 7 8 9"
 past_10s="10 11 12 13 14 15 16 17 18 19"
 past_20s="20 21 22 23 24 25 26 27 28 29"
@@ -8,6 +11,70 @@ past_30s="30 31 32 33 34 35 36 37 38 39"
 past_40s="40 41 42 43 44 45 46 47 48 49"
 past_50s="50 51 52 53 54 55 56 57 58 59"
 past_60s="60 61"
+
+all_versions=(
+           2.0.0.20 1.3.1
+           3.0.19   1.3.4.b2
+           3.5.19   1.5.4
+           3.6.28   1.7.3
+           4.0.1    1.8.0b7
+           5.0.1    1.9.2
+           6.0.2    1.9.2
+           7.0.1    1.9.2
+           8.0.1    1.9.2
+           9.0.1    1.9.2
+           10.0.2   1.9.2
+           11.0     1.9.2
+           12.0     1.9.2
+           13.0.1   1.10.6
+           14.0.1   1.10.6
+           15.0.1   1.10.6
+           16.0.1   1.10.6
+           17.0.1   1.11.3
+           18.0.2   1.11.3
+           19.0.2   1.11.3
+           20.0     1.11.3
+           21.0     1.11.3
+           22.0     1.11.3
+           23.0.1   1.12.0
+           24.0     1.12.0
+           25.0.1   1.12.0
+           26.0     1.12.0
+           27.0.1   1.12.0
+           28.0     1.12.0
+           29.0.1   1.12.0
+           30.0     2.0.6
+           31.0     2.0.6
+           32.0     2.0.6
+           33.1.1   2.0.6
+           34.0     2.0.6
+           35.0.1   2.0.6
+           36.0     2.0.6
+           37.0     2.0.8
+           38.0     2.0.9
+           39.0     2.0.11
+           40.0     2.0.12
+           41.0     2.0.12
+           42.0     2.0.13
+           43.0     2.0.13
+           44.0     2.0.13
+           45.0     2.0.14
+           46.0     2.0.16
+           47.0     2.0.17
+           48.0     2.0.17
+           49.0     2.0.17
+           50.0     2.0.18
+           51.0     ""
+           52.0     ""
+           53.0.3   ""
+           54.0.1   ""
+           55.0.3   ""
+           56.0.2   ""
+           57.0.4   ""
+           58.0.2   ""
+           59.0.3   ""
+           60.0.2   ""
+           61.0     "")
 
 default_versions_past="${past_00s} ${past_10s} ${past_20s} ${past_30s} ${past_40s} ${past_50s} ${past_60s}"
 
@@ -17,7 +84,7 @@ versions_usage_point_two=""
 versions_usage_point_three=""
 versions_usage_point_four_up="47 48"
 
-default_versions="${default_versions_past} ${default_versions_current}"
+default_versions="${default_versions_past}"
 tmp_directory="/tmp/firefoxes/"
 bits_host="https://raw.githubusercontent.com/jgornick/install-all-firefox/master/bits/"
 bits_directory="${tmp_directory}bits/"
@@ -44,6 +111,10 @@ binary_folder="/Contents/MacOS/"
 uses_v2_signing=false
 
 specified_locale=${2:-$locale_default}
+
+ver_long=""
+ver_minor=""
+ver_major=0
 
 if [[ "${3}" == "no_prompt" ]]; then
     no_prompt=true
@@ -91,881 +162,68 @@ get_associated_information(){
     release_name=$release_name_default
     firebug_version=""
 
-    case $1 in
-        2 | 2.0 | 2.0.0.20)
-            release_directory="2.0.0.20"
-            dmg_file="Firefox 2.0.0.20.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox-bin"
-            short_name="fx2"
-            nice_name="Firefox 2.0"
-
-            firebug_version="1.3.1"
-            firebug_root="http://getfirebug.com/releases/firebug/1.3/"
-            firebug_file="firebug-1.3.1.xpi"
-        ;;
-        3 | 3.0 | 3.0.19)
-            release_directory="3.0.19-real-real"
-            dmg_file="Firefox 3.0.19.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox-bin"
-            short_name="fx3"
-            nice_name="Firefox 3.0"
-
-            firebug_version="1.3.4b2"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        3.5 | 3.5.19)
-            release_directory="3.5.19"
-            dmg_file="Firefox 3.5.19.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox-bin"
-            short_name="fx3-5"
-            nice_name="Firefox 3.5"
-
-            firebug_version="1.5.4"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        3.6 | 3.6.28)
-            release_directory="3.6.28"
-            dmg_file="Firefox 3.6.28.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox-bin"
-            short_name="fx3-6"
-            nice_name="Firefox 3.6"
-
-            firebug_version="1.7.3"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        4 | 4.0 | 4.0.1)
-            release_directory="4.0.1"
-            dmg_file="Firefox 4.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox-bin"
-            short_name="fx4"
-            nice_name="Firefox 4.0"
-
-            firebug_version="1.8.0b7"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        5 | 5.0 | 5.0.1)
-            release_directory="5.0.1"
-            dmg_file="Firefox 5.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox-bin"
-            short_name="fx5"
-            nice_name="Firefox 5.0"
-
-            firebug_version="1.9.2"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        6 | 6.0 | 6.0.2)
-            release_directory="6.0.2"
-            dmg_file="Firefox 6.0.2.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox-bin"
-            short_name="fx6"
-            nice_name="Firefox 6.0"
-
-            firebug_version="1.9.2"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        7 | 7.0 | 7.0.1)
-            release_directory="7.0.1"
-            dmg_file="Firefox 7.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx7"
-            nice_name="Firefox 7.0"
-
-            firebug_version="1.9.2"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        8 | 8.0 | 8.0.1)
-            release_directory="8.0.1"
-            dmg_file="Firefox 8.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx8"
-            nice_name="Firefox 8.0"
-
-            firebug_version="1.9.2"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        9 | 9.0 | 9.0.1)
-            release_directory="9.0.1"
-            dmg_file="Firefox 9.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx9"
-            nice_name="Firefox 9.0"
-
-            firebug_version="1.9.2"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        10 | 10.0 | 10.0.2)
-            release_directory="10.0.2"
-            dmg_file="Firefox 10.0.2.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx10"
-            nice_name="Firefox 10.0"
-
-            firebug_version="1.9.2"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        11 | 11.0)
-            release_directory="11.0"
-            dmg_file="Firefox 11.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx11"
-            nice_name="Firefox 11.0"
-
-            firebug_version="1.9.2"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        12 | 12.0)
-            release_directory="12.0"
-            dmg_file="Firefox 12.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx12"
-            nice_name="Firefox 12.0"
-
-            firebug_version="1.9.2"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        13 | 13.0 | 13.0.1)
-            release_directory="13.0.1"
-            dmg_file="Firefox 13.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx13"
-            nice_name="Firefox 13.0"
-
-            firebug_version="1.10.6"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        14 | 14.0 | 14.0.1)
-            release_directory="14.0.1"
-            dmg_file="Firefox 14.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx14"
-            nice_name="Firefox 14.0"
-
-            firebug_version="1.10.6"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        15 | 15.0 | 15.0.1)
-            release_directory="15.0.1"
-            dmg_file="Firefox 15.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx15"
-            nice_name="Firefox 15.0"
-
-            firebug_version="1.10.6"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        16 | 16.0 | 16.0.1)
-            release_directory="16.0.1"
-            dmg_file="Firefox 16.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx16"
-            nice_name="Firefox 16.0"
-
-            firebug_version="1.10.6"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        17 | 17.0 | 17.0.1)
-            release_directory="17.0.1"
-            dmg_file="Firefox 17.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx17"
-            nice_name="Firefox 17.0"
-
-            firebug_version="1.11.3"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        18 | 18.0 | 18.0.2)
-            release_directory="18.0.2"
-            dmg_file="Firefox 18.0.2.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx18"
-            nice_name="Firefox 18.0"
-
-            firebug_version="1.11.3"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        19 | 19.0 | 19.0.2)
-            release_directory="19.0.2"
-            dmg_file="Firefox 19.0.2.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx19"
-            nice_name="Firefox 19.0"
-
-            firebug_version="1.11.3"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        20 | 20.0)
-            release_directory="20.0"
-            dmg_file="Firefox 20.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx20"
-            nice_name="Firefox 20.0"
-
-            firebug_version="1.11.3"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        21 | 21.0)
-            release_directory="21.0"
-            dmg_file="Firefox 21.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx21"
-            nice_name="Firefox 21.0"
-
-            firebug_version="1.11.3"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        22 | 22.0)
-            release_directory="22.0"
-            dmg_file="Firefox 22.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx22"
-            nice_name="Firefox 22.0"
-
-            firebug_version="1.11.3"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        23 | 23.0 | 23.0.1)
-            release_directory="23.0.1"
-            dmg_file="Firefox 23.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx23"
-            nice_name="Firefox 23.0"
-
-            firebug_version="1.12.0"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        24 | 24.0)
-            release_directory="24.0"
-            dmg_file="Firefox 24.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx24"
-            nice_name="Firefox 24.0"
-
-            firebug_version="1.12.0"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        25 | 25.0 | 25.0.1)
-            release_directory="25.0.1"
-            dmg_file="Firefox 25.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx25"
-            nice_name="Firefox 25.0"
-
-            firebug_version="1.12.0"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        26 | 26.0)
-            release_directory="26.0"
-            dmg_file="Firefox 26.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx26"
-            nice_name="Firefox 26.0"
-
-            firebug_version="1.12.0"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        27 | 27.0 | 27.0.1)
-            release_directory="27.0.1"
-            dmg_file="Firefox 27.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx27"
-            nice_name="Firefox 27.0"
-
-            firebug_version="1.12.0"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        28 | 28.0)
-            release_directory="28.0"
-            dmg_file="Firefox 28.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx28"
-            nice_name="Firefox 28.0"
-
-            firebug_version="1.12.0"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        29 | 29.0 | 29.0.1)
-            release_directory="29.0.1"
-            dmg_file="Firefox 29.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx29"
-            nice_name="Firefox 29.0"
-
-            firebug_version="1.12.0"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        30 | 30.0)
-            release_directory="30.0"
-            dmg_file="Firefox 30.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx30"
-            nice_name="Firefox 30.0"
-
-            firebug_version="2.0.6"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        31 | 31.0)
-            release_directory="31.0"
-            dmg_file="Firefox 31.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx31"
-            nice_name="Firefox 31.0"
-
-            firebug_version="2.0.6"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        32 | 32.0)
-            release_directory="32.0"
-            dmg_file="Firefox 32.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx32"
-            nice_name="Firefox 32.0"
-
-            firebug_version="2.0.6"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        33 | 33.0 | 33.1 | 33.1.1)
-            release_directory="33.1.1"
-            dmg_file="Firefox 33.1.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx33"
-            nice_name="Firefox 33.0"
-
-            firebug_version="2.0.6"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        34 | 34.0)
-            release_directory="34.0"
-            dmg_file="Firefox 34.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx34"
-            nice_name="Firefox 34.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.6"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        35 | 35.0 | 35.0.1)
-            release_directory="35.0.1"
-            dmg_file="Firefox 35.0.1.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx35"
-            nice_name="Firefox 35.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.6"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        36 | 36.0)
-            release_directory="36.0"
-            dmg_file="Firefox 36.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx36"
-            nice_name="Firefox 36.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.6"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        37 | 37.0)
-            release_directory="37.0"
-            dmg_file="Firefox 37.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx37"
-            nice_name="Firefox 37.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.8"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        38 | 38.0)
-            release_directory="38.0"
-            dmg_file="Firefox 38.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx38"
-            nice_name="Firefox 38.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.9"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        39 | 39.0)
-            release_directory="39.0.3"
-            dmg_file="Firefox 39.0.3.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx39"
-            nice_name="Firefox 39.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.11"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        40 | 40.0)
-            release_directory="40.0.3"
-            dmg_file="Firefox 40.0.3.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx40"
-            nice_name="Firefox 40.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.12"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        41 | 41.0)
-            release_directory="41.0"
-            dmg_file="Firefox 41.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
-            binary="firefox"
-            short_name="fx41"
-            nice_name="Firefox 41.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.12"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        42 | 42.0)
-            release_directory="42.0"
-            dmg_file="Firefox 42.0.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx42"
-            nice_name="Firefox 42.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.13"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        43 | 43.0)
-            release_directory="43.0"
-            dmg_file="Firefox 43.0.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx43"
-            nice_name="Firefox 43.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.13"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        44 | 44.0)
-            release_directory="44.0"
-            dmg_file="Firefox 44.0.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx44"
-            nice_name="Firefox 44.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.13"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        45 | 45.0)
-            release_directory="45.0"
-            dmg_file="Firefox 45.0.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx45"
-            nice_name="Firefox 45.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.14"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        46 | 46.0)
-            release_directory="46.0"
-            dmg_file="Firefox 46.0.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx46"
-            nice_name="Firefox 46.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.16"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        47 | 47.0)
-            release_directory="47.0"
-            dmg_file="Firefox 47.0.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx47"
-            nice_name="Firefox 47.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.17"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        48 | 48.0)
-            release_directory="48.0"
-            dmg_file="Firefox 48.0.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx48"
-            nice_name="Firefox 48.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.17"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        49 | 49.0)
-            release_directory="49.0"
-            dmg_file="Firefox 49.0.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx49"
-            nice_name="Firefox 49.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.17"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        50 | 50.0)
-            release_directory="50.0"
-            dmg_file="Firefox 50.0.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx50"
-            nice_name="Firefox 50.0"
-
-            uses_v2_signing=true
-
-            firebug_version="2.0.18"
-            firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
-            firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
-            firebug_file="firebug-${firebug_version}.xpi"
-        ;;
-        51 | 51.0)
-            release_directory="51.0"
-            dmg_file="Firefox 51.0.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx51"
-            nice_name="Firefox 51.0"
-
-            uses_v2_signing=true
-        ;;
-        52 | 52.0)
-            release_directory="52.0"
-            dmg_file="Firefox 52.0.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx52"
-            nice_name="Firefox 52.0"
-
-            uses_v2_signing=true
-        ;;
-        53 | 53.0 | 53.0.3)
-            release_directory="53.0.3"
-            dmg_file="Firefox 53.0.3.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx53"
-            nice_name="Firefox 53.0"
-
-            uses_v2_signing=true
-        ;;
-        54 | 54.0 | 54.0.1)
-            release_directory="54.0.1"
-            dmg_file="Firefox 54.0.1.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx54"
-            nice_name="Firefox 54.0"
-
-            uses_v2_signing=true
-        ;;
-        55 | 55.0 | 55.0.3)
-            release_directory="55.0.3"
-            dmg_file="Firefox 55.0.3.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx55"
-            nice_name="Firefox 55.0"
-
-            uses_v2_signing=true
-        ;;
-        56 | 56.0 | 56.0.2)
-            release_directory="56.0.2"
-            dmg_file="Firefox 56.0.2.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx56"
-            nice_name="Firefox 56.0"
-
-            uses_v2_signing=true
-        ;;
-        57 | 57.0 | 57.0.4)
-            release_directory="57.0.4"
-            dmg_file="Firefox 57.0.4.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx57"
-            nice_name="Firefox 57.0"
-
-            uses_v2_signing=true
-        ;;
-        58 | 58.0 | 58.0.2)
-            release_directory="58.0.2"
-            dmg_file="Firefox 58.0.2.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx58"
-            nice_name="Firefox 58.0"
-
-            uses_v2_signing=true
-        ;;
-        59 | 59.0 | 59.0.3)
-            release_directory="59.0.3"
-            dmg_file="Firefox 59.0.3.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx59"
-            nice_name="Firefox 59.0"
-
-            uses_v2_signing=true
-        ;;
-        60 | 60.0 | 60.0.2)
-            release_directory="60.0.2"
-            dmg_file="Firefox 60.0.2.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx60"
-            nice_name="Firefox 60.0"
-
-            uses_v2_signing=true
-        ;;
-        61 | 61.0)
-            release_directory="61.0"
-            dmg_file="Firefox 61.0.dmg"
-            sum_file="SHA512SUMS"
-            sum_file_type="sha512"
-            binary="firefox"
-            short_name="fx61"
-            nice_name="Firefox 61.0"
-
-            uses_v2_signing=true
-        ;;
-        *)
-            error "    Invalid version specified!\n\n    Please choose one of:\n    all current $default_versions\n\n"
-            error "    To see which versions you have installed, type:\n    ./firefoxes.sh status"
-            exit 1
-        ;;
-  esac
+    # get the long/precise version number and the corresponding firebug (firefox <=50, 0 for the others)
+    for ((j=0; j < ${#all_versions[@]}; j=j+2)) do
+        #echo "checking on element: ${all_versions}"
+        ver_to_use=${all_versions[$j]}
+        ver_long=$ver_to_use
+        if [ -z "${ver_to_use##$1*}" ]; then
+            firebug_version=${all_versions[$j+1]}
+
+            # check if version is x.y or x.y.z
+            # deletes everthing except the '.'
+            tmp=${ver_to_use//[^.]}
+            if [ ${#tmp} -eq 1 ]; then
+                # e.g. 42.0
+                ver_minor=${ver_long}
+            elif [ ${#tmp} -eq 2 ]; then
+                # e.g. 19.0.2
+                ver_minor=${ver_long%.*}
+            elif [ ${#tmp} -eq 3 ]; then
+                # e.g. 2.0.0.20
+                ver_minor=${ver_long%.*.*}
+            fi
+            ver_major=${ver_long%%.*}
+            # echo "ver_long: ${ver_long}, ver_minor: ${ver_minor}, ver_major: ${ver_major}, firebug ${firebug_version}"
+            break
+        fi
+    done
+    if [ $ver_major -eq 0 ]; then
+         error "    Invalid version specified!\n\n    Please choose one of:\n    all current $default_versions\n\n"
+         error "    To see which versions you have installed, type:\n    ./firefoxes.sh status"
+         exit 1
+    fi
+
+    release_directory="${ver_long}"
+    dmg_file="Firefox ${ver_long}.dmg"
+    if [ "$ver_minor" = "3.5" ] || [ "$ver_minor" = "3.6" ]; then
+        short_name="fx${ver_minor/./-}"
+    else
+        short_name="fx${ver_major}"
+    fi
+    # sum_file: MD5SUMS <=41, SHA512SUMS >= 42
+    if [ $ver_major -le 41 ]; then
+        sum_file_type="md5"
+        sum_file="MD5SUMS"
+    else
+        sum_file_type="sha512"
+        sum_file="SHA512SUMS"
+    fi
+    # binary: 'firefox-bin' <= 6, 'firefox' >= 7
+    binary="firefox"
+    nice_name="Firefox ${ver_minor}"
+    if [ $ver_major -le 6 ]; then
+        binary="firefox-bin"
+        nice_name="Firefox ${ver_minor}"
+    fi
+    if [ $ver_major -ge 34 ]; then
+        uses_v2_signing=true
+    fi
+    # firebug_version was set in the for loop
+    # firebug <= 50
+    firebug_version_short=$(echo "${firebug_version}" | sed 's/\.[0-9a-zA-Z]*$//')
+    firebug_root="http://getfirebug.com/releases/firebug/${firebug_version_short}/"
+    firebug_file="firebug-${firebug_version}.xpi"
 }
 setup_dirs(){
     if [[ ! -d "$tmp_directory" ]]; then
@@ -1226,6 +484,8 @@ EOL
 # make config
 config_file="${config_dir}mozilla.cfg"
 cat > "${config_file}" <<EOL
+// IMPORTANT: always start on 2. line
+// https://support.mozilla.org/en-US/kb/customizing-firefox-using-autoconfig
 lockPref("browser.shell.checkDefaultBrowser", false);
 lockPref("browser.startup.homepage_override.mstone", "ignore");
 lockPref("app.update.enabled", false);
