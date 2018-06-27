@@ -1137,6 +1137,8 @@ EOL
 # make config
 config_file="${config_dir}mozilla.cfg"
 cat > "${config_file}" <<EOL
+// always start on 2. line (or later I assume), a feature not a bug
+// see https://support.mozilla.org/en-US/kb/customizing-firefox-using-autoconfig
 lockPref("browser.shell.checkDefaultBrowser", false);
 lockPref("browser.startup.homepage_override.mstone", "ignore");
 lockPref("app.update.enabled", false);
