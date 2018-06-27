@@ -1,5 +1,5 @@
 #!/bin/bash
-default_versions_current="60"
+default_versions_current="61"
 
 past_00s="2 3 3.5 3.6 4 5 6 7 8 9"
 past_10s="10 11 12 13 14 15 16 17 18 19"
@@ -7,7 +7,7 @@ past_20s="20 21 22 23 24 25 26 27 28 29"
 past_30s="30 31 32 33 34 35 36 37 38 39"
 past_40s="40 41 42 43 44 45 46 47 48 49"
 past_50s="50 51 52 53 54 55 56 57 58 59"
-past_60s=""
+past_60s="60 61"
 
 default_versions_past="${past_00s} ${past_10s} ${past_20s} ${past_30s} ${past_40s} ${past_50s} ${past_60s}"
 
@@ -43,7 +43,7 @@ release_type=""
 binary_folder="/Contents/MacOS/"
 uses_v2_signing=false
 
-specified_locale=$2
+specified_locale=${2:-$locale_default}
 
 if [[ "${3}" == "no_prompt" ]]; then
     no_prompt=true
@@ -938,14 +938,25 @@ get_associated_information(){
 
             uses_v2_signing=true
         ;;
-        60 | 60.0)
-            release_directory="60.0"
-            dmg_file="Firefox 60.0.dmg"
+        60 | 60.0 | 60.0.2)
+            release_directory="60.0.2"
+            dmg_file="Firefox 60.0.2.dmg"
             sum_file="MD5SUMS"
             sum_file_type="md5"
             binary="firefox"
             short_name="fx60"
             nice_name="Firefox 60.0"
+
+            uses_v2_signing=true
+        ;;
+        61 | 61.0)
+            release_directory="61.0"
+            dmg_file="Firefox 61.0.dmg"
+            sum_file="MD5SUMS"
+            sum_file_type="md5"
+            binary="firefox"
+            short_name="fx61"
+            nice_name="Firefox 61.0"
 
             uses_v2_signing=true
         ;;
