@@ -9,7 +9,9 @@ TEXT_Y_OFFSET="265"
 
 FONT_POINT_SIZE=120
 
-IN_ICON_BASE="base.png"
+#IN_ICON_BASE="base.png"
+# new icon starting from version 56
+IN_ICON_BASE="base_firefox56.png"
 IN_TEXT_CONTAINER="box.png"
 
 TMP_DIR="/tmp/"
