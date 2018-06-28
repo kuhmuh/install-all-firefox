@@ -697,8 +697,8 @@ get_associated_information(){
         42 | 42.0)
             release_directory="42.0"
             dmg_file="Firefox 42.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
+            sum_file="SHA512SUMS"
+            sum_file_type="sha512"
             binary="firefox"
             short_name="fx42"
             nice_name="Firefox 42.0"
@@ -713,8 +713,8 @@ get_associated_information(){
         43 | 43.0)
             release_directory="43.0"
             dmg_file="Firefox 43.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
+            sum_file="SHA512SUMS"
+            sum_file_type="sha512"
             binary="firefox"
             short_name="fx43"
             nice_name="Firefox 43.0"
@@ -729,8 +729,8 @@ get_associated_information(){
         44 | 44.0)
             release_directory="44.0"
             dmg_file="Firefox 44.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
+            sum_file="SHA512SUMS"
+            sum_file_type="sha512"
             binary="firefox"
             short_name="fx44"
             nice_name="Firefox 44.0"
@@ -745,8 +745,8 @@ get_associated_information(){
         45 | 45.0)
             release_directory="45.0"
             dmg_file="Firefox 45.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
+            sum_file="SHA512SUMS"
+            sum_file_type="sha512"
             binary="firefox"
             short_name="fx45"
             nice_name="Firefox 45.0"
@@ -761,8 +761,8 @@ get_associated_information(){
         46 | 46.0)
             release_directory="46.0"
             dmg_file="Firefox 46.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
+            sum_file="SHA512SUMS"
+            sum_file_type="sha512"
             binary="firefox"
             short_name="fx46"
             nice_name="Firefox 46.0"
@@ -777,8 +777,8 @@ get_associated_information(){
         47 | 47.0)
             release_directory="47.0"
             dmg_file="Firefox 47.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
+            sum_file="SHA512SUMS"
+            sum_file_type="sha512"
             binary="firefox"
             short_name="fx47"
             nice_name="Firefox 47.0"
@@ -793,8 +793,8 @@ get_associated_information(){
         48 | 48.0)
             release_directory="48.0"
             dmg_file="Firefox 48.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
+            sum_file="SHA512SUMS"
+            sum_file_type="sha512"
             binary="firefox"
             short_name="fx48"
             nice_name="Firefox 48.0"
@@ -809,8 +809,8 @@ get_associated_information(){
         49 | 49.0)
             release_directory="49.0"
             dmg_file="Firefox 49.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
+            sum_file="SHA512SUMS"
+            sum_file_type="sha512"
             binary="firefox"
             short_name="fx49"
             nice_name="Firefox 49.0"
@@ -825,8 +825,8 @@ get_associated_information(){
         50 | 50.0)
             release_directory="50.0"
             dmg_file="Firefox 50.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
+            sum_file="SHA512SUMS"
+            sum_file_type="sha512"
             binary="firefox"
             short_name="fx50"
             nice_name="Firefox 50.0"
@@ -841,8 +841,8 @@ get_associated_information(){
         51 | 51.0)
             release_directory="51.0"
             dmg_file="Firefox 51.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
+            sum_file="SHA512SUMS"
+            sum_file_type="sha512"
             binary="firefox"
             short_name="fx51"
             nice_name="Firefox 51.0"
@@ -852,8 +852,8 @@ get_associated_information(){
         52 | 52.0)
             release_directory="52.0"
             dmg_file="Firefox 52.0.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
+            sum_file="SHA512SUMS"
+            sum_file_type="sha512"
             binary="firefox"
             short_name="fx52"
             nice_name="Firefox 52.0"
@@ -863,8 +863,8 @@ get_associated_information(){
         53 | 53.0 | 53.0.3)
             release_directory="53.0.3"
             dmg_file="Firefox 53.0.3.dmg"
-            sum_file="MD5SUMS"
-            sum_file_type="md5"
+            sum_file="SHA512SUMS"
+            sum_file_type="sha512"
             binary="firefox"
             short_name="fx53"
             nice_name="Firefox 53.0"
@@ -949,7 +949,7 @@ check_dmg(){
 }
 get_sum_file(){
     cd "${tmp_directory}"
-    curl -C - -L --progress-bar "${ftp_root}${sum_file_folder}${sum_file}" -o "${sum_file}-${short_name}"
+    curl -C - -L --progress-bar "${dmg_host}releases/${release_directory}/${sum_file}" -o "${sum_file}-${short_name}"
 }
 download_dmg(){
     cd "${tmp_directory}"
