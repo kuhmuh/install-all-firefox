@@ -1,18 +1,15 @@
-#!/bin/bash
+#!/bin/bash +x
+# purpose: install multiple versions of Firefox on Mac
+#
+
 default_versions_current="61"
 
 # to add new versions: add it to past_xxs string and add it to the all_version array
 # array structure is <exact version> ""
 
-past_00s="2 3 3.5 3.6 4 5 6 7 8 9"
-past_10s="10 11 12 13 14 15 16 17 18 19"
-past_20s="20 21 22 23 24 25 26 27 28 29"
-past_30s="30 31 32 33 34 35 36 37 38 39"
-past_40s="40 41 42 43 44 45 46 47 48 49"
-past_50s="50 51 52 53 54 55 56 57 58 59"
-past_60s="60 61"
+all_versions=()
 
-all_versions=(
+old_all_versions=(
            2.0.0.20 1.3.1           3.0.19   1.3.4.b2           3.5.19   1.5.4
            3.6.28   1.7.3           4.0.1    1.8.0b7            5.0.1    1.9.2
            6.0.2    1.9.2           7.0.1    1.9.2              8.0.1    1.9.2
@@ -35,8 +32,30 @@ all_versions=(
            57.0.4   ""              58.0.2   ""                 59.0.3   ""
            60.0.2   ""              61.0     ""
            )
-
-default_versions_past="${past_00s} ${past_10s} ${past_20s} ${past_30s} ${past_40s} ${past_50s} ${past_60s}"
+# for firefox versions < 51
+firebug_versions=(
+           ## 1.3.1    1.3.4.b2    1.5.4 1.7.3
+                    1.8.0b7     1.9.2
+           1.9.2    1.9.2       1.9.2
+           1.9.2    1.9.2       1.9.2
+           1.9.2    1.10.6      1.10.6
+           1.10.6   1.10.6      1.11.3
+           1.11.3   1.11.3      1.11.3
+           1.11.3   1.11.3      1.12.0
+           1.12.0   1.12.0      1.12.0
+           1.12.0   1.12.0      1.12.0
+           2.0.6    2.0.6       2.0.6
+           2.0.6    2.0.6       2.0.6
+           2.0.6    2.0.8       2.0.9
+           2.0.11   2.0.12      2.0.12
+           2.0.13   2.0.13      2.0.13
+           2.0.14   2.0.16      2.0.17
+           2.0.17   2.0.17      2.0.18
+           ""       ""          ""
+           ""       ""          ""
+           ""       ""          ""
+           ""       ""
+           )
 
 # Using data from http://gs.statcounter.com/
 versions_usage_point_one="43 44 45 46 50"
@@ -44,7 +63,7 @@ versions_usage_point_two=""
 versions_usage_point_three=""
 versions_usage_point_four_up="47 48"
 
-default_versions="${default_versions_past}"
+default_versions=""
 tmp_directory="/tmp/firefoxes/"
 bits_host="https://raw.githubusercontent.com/jgornick/install-all-firefox/master/bits/"
 bits_directory="${tmp_directory}bits/"
@@ -116,6 +135,57 @@ ask(){
     done
 }
 
+# get the firefox version from the mozilla repo
+# this function populates the all_versions array
+#
+# parameter : none
+# return    : none
+#
+get_versions(){
+    #all_releases="$(cat firefox.releases | egrep -o '/releases/[0-9.]+/' | sed 's$/releases/\([0-9.]*\)/$\1$' | sort -n)"
+    all_releases="$( curl -C - -L --progress-bar ${dmg_host}releases/ | egrep -o '/releases/[0-9.]+/' | sed 's$/releases/\([0-9.]*\)/$\1$' | sort -n)"
+
+    #all_versions=()
+    i=0
+
+    prev_release=0.0
+    curr_release=0.0
+
+    #for r in 50.2 55.8 56.2 56.8 56.9; do
+    for r in $all_releases; do
+        # get the latest of each major version
+        next=${r%%.*}
+        curr=${curr_release%%.*}
+        # skip version below 4
+        if [ $next -lt 4 ]; then
+            # avoid the 3.5 anomaly, for now
+            continue
+        fi
+        #echo "next: $next, curr: $curr"
+
+        if [ $next -ne $curr ]; then
+            # got a new major
+            prev_release=$curr_release
+            curr_release=$r
+            ## echo "prev release: $prev_release, curr release: $curr_release"
+            # add prev to array since that is the latest version of it
+            if [[ "$prev_release" > "0.0" ]]; then
+                all_versions[$i]=$prev_release
+                i=$((++i))
+            fi
+        else
+            # still on the same major but later minor
+            # this depends on the release list being numeric sorted
+            curr_release=$r
+        fi
+    done
+    # add the last entry
+    all_versions[$i]=$curr_release
+    default_versions="${all_versions[*]}"
+    ##echo "array: ${all_versions[@]}"
+    ##echo "array: ${default_versions[@]}"
+}
+
 get_associated_information(){
     # Reset everything
     vol_name=$vol_name_default
@@ -123,12 +193,12 @@ get_associated_information(){
     firebug_version=""
 
     # get the long/precise version number and the corresponding firebug (firefox <=50, 0 for the others)
-    for ((j=0; j < ${#all_versions[@]}; j=j+2)) do
-        #echo "checking on element: ${all_versions}"
+    for ((j=0; j < ${#all_versions[@]}; j++)) do
+        ##echo "checking on element: ${all_versions[$j]}, j: $j"
         ver_to_use=${all_versions[$j]}
         ver_long=$ver_to_use
         if [ -z "${ver_to_use##$1*}" ]; then
-            firebug_version=${all_versions[$j+1]}
+            firebug_version=${firebug_versions[$j]}
 
             # check if version is x.y or x.y.z
             # deletes everthing except the '.'
@@ -471,6 +541,8 @@ log(){
     return $?
 }
 
+# get the available version from the big 'ol internet
+get_versions
 # Replace special keywords with actual versions (duplicates are okay; it'll work fine)
 versions=${versions/all/${default_versions}}
 versions=${versions/current/${default_versions_current}}
@@ -547,6 +619,7 @@ clean_up() {
     return 0
 }
 
+## 'main' starts here
 if [ "$(uname -s)" != "Darwin" ]; then
     error "This script is designed to be run on OS X\nExiting..."
     exit 0
@@ -555,6 +628,7 @@ fi
 get_locale
 
 for VERSION in $versions; do
+    ##echo "get assoc for version : $VERSION"
     get_associated_information $VERSION
     log "====================\nInstalling ${nice_name}"
     setup_dirs
