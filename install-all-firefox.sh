@@ -554,14 +554,27 @@ versions=${versions/min_point_three/${versions_usage_point_three} ${versions_usa
 versions=${versions/min_point_four/${versions_usage_point_four_up}}
 
 if [[ $versions == 'status' ]]; then
-    printf "The versions in \033[32mgreen\033[00m are installed:\n"
+    printf "The versions in \033[32mgreen\033[00m are installed, \033[35mcyan\033[00m means there's an updated version available:\n"
     for VERSION in $default_versions; do
         get_associated_information $VERSION
-        if [[ -d "${install_directory}${nice_name}.app" ]]; then
-            printf "\n\033[32m - ${nice_name} ($VERSION)\033[00m"
+        app_path="${install_directory}${nice_name}.app"
+        version_file_path=${app_path}/Contents/Resources/application.ini
+        if [ -d "${app_path}" ]; then
+            # check if there's an update available
+            fgrep "Version=${ver_long}" "${version_file_path}" >/dev/null 2>&1
+            ret=$?
+            ##echo "fgrep return value: ${ret}"
+            output_color="\033[31m"
+            # WTF: if success ret should be 0 but it's 1????
+            if [[ ${ret} -eq 1 ]]; then
+                output_color="\033[35m"
+            else
+                output_color="\033[32m"
+            fi
         else
-            printf "\n\033[31m - ${nice_name} ($VERSION)\033[00m"
+            output_color="\033[31m"
         fi
+        printf "\n${output_color} - ${nice_name} ($VERSION)\033[00m"
     done
     printf "\n\nTo install, type \033[1m./firefoxes.sh [version]\033[22m, \nwith [version] being the number or name in parentheses\n\n"
     exit 1
