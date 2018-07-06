@@ -558,10 +558,12 @@ if [[ $versions == 'status' ]]; then
     for VERSION in $default_versions; do
         get_associated_information $VERSION
         app_path="${install_directory}${nice_name}.app"
-        version_file_path=${app_path}/Contents/Resources/application.ini
+        #version_file_path=${app_path}/Contents/Resources/application.ini
+        version_file_path=${app_path}/Contents/Info.plist
         if [ -d "${app_path}" ]; then
             # check if there's an update available
-            fgrep "Version=${ver_long}" "${version_file_path}" >/dev/null 2>&1
+            #fgrep "Version=${ver_long}" "${version_file_path}" >/dev/null 2>&1
+            fgrep ">${ver_long}" "${version_file_path}" >/dev/null 2>&1
             ret=$?
             ##echo "fgrep return value: ${ret}"
             output_color="\033[31m"
