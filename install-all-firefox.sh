@@ -566,14 +566,16 @@ if [[ $versions == 'status' ]]; then
             fgrep ">${ver_long}" "${version_file_path}" >/dev/null 2>&1
             ret=$?
             ##echo "fgrep return value: ${ret}"
-            output_color="\033[31m"
             # WTF: if success ret should be 0 but it's 1????
             if [[ ${ret} -eq 1 ]]; then
-                output_color="\033[35m"
+                # light green if found but never version available
+                output_color="\033[1;32m"
             else
+                # regular green if installed
                 output_color="\033[32m"
             fi
         else
+            # color for not installed == red
             output_color="\033[31m"
         fi
         printf "\n${output_color} - ${nice_name} ($VERSION)\033[00m"
