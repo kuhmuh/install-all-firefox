@@ -554,22 +554,24 @@ versions=${versions/min_point_three/${versions_usage_point_three} ${versions_usa
 versions=${versions/min_point_four/${versions_usage_point_four_up}}
 
 if [[ $versions == 'status' ]]; then
-    printf "The versions in \033[32mgreen\033[00m are installed, \033[35mcyan\033[00m means there's an updated version available:\n"
+    printf "The versions in \033[32mgreen\033[00m are installed, \033[1;32mlight green\033[00m means there's an updated version available:\n"
     for VERSION in $default_versions; do
         get_associated_information $VERSION
         app_path="${install_directory}${nice_name}.app"
-        #version_file_path=${app_path}/Contents/Resources/application.ini
-        version_file_path=${app_path}/Contents/Info.plist
+        version_str="$VERSION"
+        if [ ${ver_major} -lt 34 ]; then
+            version_file_path=${app_path}/Contents/MacOS/application.ini
+        else
+            version_file_path=${app_path}/Contents/Resources/application.ini
+        fi
         if [ -d "${app_path}" ]; then
+            # get installed version
+            version_installed=$(sed -ne "s/^Version=\([0-9.]\{1,\}\)/\1/p" "${version_file_path}")
             # check if there's an update available
-            #fgrep "Version=${ver_long}" "${version_file_path}" >/dev/null 2>&1
-            fgrep ">${ver_long}" "${version_file_path}" >/dev/null 2>&1
-            ret=$?
-            ##echo "fgrep return value: ${ret}"
-            # WTF: if success ret should be 0 but it's 1????
-            if [[ ${ret} -eq 1 ]]; then
+            if [ ${version_installed//./} -lt ${ver_long//./} ]; then
                 # light green if found but never version available
                 output_color="\033[1;32m"
+                version_str="installed: ${version_installed}, latest: $VERSION"
             else
                 # regular green if installed
                 output_color="\033[32m"
@@ -578,7 +580,7 @@ if [[ $versions == 'status' ]]; then
             # color for not installed == red
             output_color="\033[31m"
         fi
-        printf "\n${output_color} - ${nice_name} ($VERSION)\033[00m"
+        printf "\n${output_color} - ${nice_name} (${version_str})\033[00m"
     done
     printf "\n\nTo install, type \033[1m./firefoxes.sh [version]\033[22m, \nwith [version] being the number or name in parentheses\n\n"
     exit 1
