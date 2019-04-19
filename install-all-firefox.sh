@@ -2,7 +2,7 @@
 # purpose: install multiple versions of Firefox on Mac
 #
 
-default_versions_current="61"
+default_versions_current="66"
 
 # to add new versions: add it to past_xxs string and add it to the all_version array
 # array structure is <exact version> ""
@@ -65,7 +65,7 @@ versions_usage_point_four_up="47 48"
 
 default_versions=""
 tmp_directory="/tmp/firefoxes/"
-bits_host="https://raw.githubusercontent.com/jgornick/install-all-firefox/master/bits/"
+bits_host="https://raw.githubusercontent.com/boretom/install-all-firefox/master/bits/"
 bits_directory="${tmp_directory}bits/"
 dmg_host="http://ftp.mozilla.org/pub/mozilla.org/firefox/"
 
@@ -270,10 +270,13 @@ get_bits(){
     log "Downloading bits"
     current_dir=$(pwd)
     cd "$bits_directory"
-    if [[ ! -f "setfileicon" ]]; then
-        curl -C - -L --progress-bar "${bits_host}setfileicon" -o "setfileicon"
-        chmod +x setfileicon
-    fi
+
+    for i in setfileicon create_firefox_image_with_version box.png base.png base_firefox56.png; do
+        if [[ ! -f "${i}" ]]; then
+            curl -C - -L --progress-bar "${bits_host}${i}" -o "${i}"
+            chmod +x "${i}"
+        fi
+    done
     if [[ ! -f "${short_name}.png" ]]; then
         new_icon="true"
         icon_file="${current_dir}/bits/${short_name}.png"
@@ -281,6 +284,19 @@ get_bits(){
             cp -r $icon_file "${short_name}.png"
         else
             curl -C - -L --progress-bar "${bits_host}${short_name}.png" -o "${short_name}.png"
+            fgrep 404 ${short_name}.png >/dev/null 2>&1
+            if [[ $? -eq 0 ]]; then
+                # $? == 0 : file not found in the repo but the png file is written as text
+                rm "${short_name}.png"
+                type convert > /dev/null 2>&1
+                if [[ $? -eq 0 ]]; then
+                    ${current_dir}/bits/create_firefox_image_with_version "${ver_major}.0" "${short_name}.png"
+                else
+                    echo "[error] ${short_name}.png couldn't be found and can't be created automatically"
+                    echo "        using default Firefox icon"
+                    cp -f base_firefox56.png "${short_name}.png"
+                fi
+            fi
         fi
     fi
     if [[ ! -f "${short_name}.icns" || $new_icon == "true" ]]; then
