@@ -1,22 +1,13 @@
-# This script is no longer supported
-
-![](http://cl.ly/I8MM/by%20default%202012-07-18%20at%2010.35.56.png)
-![](http://cl.ly/I8gZ/by%20default%202012-07-18%20at%2010.33.26.png)
+![](./firefoxes-versions-shortend.png)
 
 ---
 ## ABOUT
 
 This is a bash script to install all major versions of Firefox on OS X.
 
-Currently it installs:
+It installs all versions starting with 4.0, getting the list of Firefox release from ftp.mozilla.org/pub/mozilla.org/firefox/
 
-- Firefox 2.0.0.20
-- Firefox 3.0.19
-- Firefox 3.5.19
-- Firefox 3.6.28
-- All version from 4.0.1 to latest version on rolling release
-
-Optionally, the script can install Firebug for each version of Firefox too.
+Optionally, the script can install Firebug for each version of Firefox too (supported up to version 50).
 
 ### What does it do?
 
@@ -30,7 +21,7 @@ Optionally, the script can install Firebug for each version of Firefox too.
 
 5. The script creates a Firefox profile for each installed version of Firefox.
 
-6. The script modifies each Firefox app to launch with its specific profile, and customises the application icon.
+6. The script modifies each Firefox app to launch with its specific profile, disables updates and customises the application icon.
 
 7. The script can optionally download the latest Firebug available for each version of Firefox, and install it upon first launch.
 
@@ -61,11 +52,6 @@ $ ./firefoxes.sh "all"
 $ ./firefoxes.sh "current"
 $ ./firefoxes.sh "newest"
 $ ./firefoxes.sh "latest"
-
-# 'min_point_one', 'min_point_two', 'min_point_three', 'min_point_four'
-# install versions with at least 0.1%, 0.2%, 0.3% or 0.4% global usage share, respectively
-$ ./firefoxes.sh "min_point_one"
-$ ./firefoxes.sh "min_point_two"
 
 # Specify the versions you would like to install, from the list at the top of this README, separated by spaces
 # New: You can now use shorthand for versions, such as: 2, 3, 3.5, 10, 24, etc.
@@ -105,7 +91,7 @@ $ ./firefoxes.sh "all" "en-GB" "no_prompt" "/Users/myhomedir/Applications/"
 From a terminal prompt, enter the following:
 
 ```bash
-curl -L -O https://github.com/omgmog/install-all-firefox/raw/master/firefoxes.sh
+curl -L -O https://github.com/boretom/install-all-firefox/raw/master/firefoxes.sh
 chmod +x firefoxes.sh
 ./firefoxes.sh [version] [locale] [no_prompt] [install_directory]
 ```
@@ -115,21 +101,15 @@ It'll take a little while to grab the `.dmg` files, but it should only need to d
 
 
 ---
-## CONTRIBUTING
-If a new version of Firefox has been released but it's not yet here, feel free to add it and submit a pull request. You can even generate a new application icon using the `create_firefox_image_with_version` tool found in the [`bits`](https://github.com/omgmog/install-all-firefox/tree/master/bits) directory.
 
 ### Checklist when adding a new version
-You should only need to make changes in `install-all-firefox.sh` when adding a new version, and also generating a new `fx[version].png` in the `bits` directory.
+New versions DMGs are fetched from Mozilla, the only thing is to generating a new `fx[version].png` in the `bits` directory.
 
-1. Update `default_versions_current`
-2. Update `default_versions_past`
-3. Add a new version to the massive case statement in `get_associated_information()`
-4. Ensure that we're using the correct/latest version of Firebug. The [Firebug blog](http://getfirebug.com/) is pretty good at mentioning which versions of Firefox are supported with each release.
-5. Generate a new version icon:
+1. Generate a new version icon:
 
 ```bash
 cd bits
-./create_firefox_image_with_version "36.0" fx36.png
+./create_firefox_image_with_version "80.0" fx80.png
 ```
 
 `create_firefox_image_with_version` uses ImageMagick's `convert` utility to composite the two base images together with text, so make sure you've got that installed first:
@@ -140,6 +120,7 @@ $ brew install imagemagick gs
 
 ---
 ## CREDITS
+- [Original script from omgmog](https://github.com/omgmog/install-all-firefox)
 - [setfileicon](http://maxao.free.fr/telechargements/setfileicon.m) is a utility created by Damien Bobillot (damien.bobillot.2002_setfileicon@m4x.org) http://maxao.free.fr/telechargements/setfileicon.gz
 - [Firebug](http://getfirebug.com/)
 - Thanks to the community for using/reporting issues/making suggestions for features!
