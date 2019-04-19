@@ -524,6 +524,18 @@ lockPref("toolkit.telemetry.prompted", 2);
 lockPref("toolkit.telemetry.rejected", true);
 EOL
 
+# Firefox 63 and later changed disabling app update
+# https://github.com/mozilla/policy-templates/blob/master/README.md
+# check for "DisableAppUpdate" section
+#
+# tl;dr: create a file policies.json in 'Resources/distribution' with the below content
+if [ $ver_major -gt 62 ]; then
+    mkdir -p "${config_dir}distribution"
+    cat > "${config_dir}distribution/policies.json" <<EOL
+{ "policies": { "DisableAppUpdate": true } }
+EOL
+fi
+
     cd "${bits_directory}"
     ./setfileicon "${short_name}.icns" "${install_directory}/${nice_name}.app/"
 }
