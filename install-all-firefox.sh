@@ -65,7 +65,7 @@ versions_usage_point_four_up="47 48"
 
 default_versions=""
 tmp_directory="/tmp/firefoxes/"
-bits_host="https://raw.githubusercontent.com/boretom/install-all-firefox/master/bits/"
+bits_host="https://raw.githubusercontent.com/kuhmuh/install-all-firefox/master/bits/"
 bits_directory="${tmp_directory}bits/"
 dmg_host="http://ftp.mozilla.org/pub/mozilla.org/firefox/"
 

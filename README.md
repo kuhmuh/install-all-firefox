@@ -109,9 +109,7 @@ brew install https://raw.githubusercontent.com/mklement0/fileicon/master/fileico
 ---
 ## CREDITS
 - [Original script from omgmog](https://github.com/omgmog/install-all-firefox)
-- [setfileicon](http://maxao.free.fr/telechargements/setfileicon.m) is a utility created by Damien Bobillot (damien.bobillot.2002_setfileicon@m4x.org) http://maxao.free.fr/telechargements/setfileicon.gz
 - [Firebug](http://getfirebug.com/)
 - Thanks to the community for using/reporting issues/making suggestions for features!
 - Thanks to Lurst for his [`create_firefox_image_with_version`](https://github.com/LuRsT/create_firefox_image_with_version) tool.
-- [osxiconutils (replacment for setfileicon)](https://github.com/sveinbjornt/osxiconutils)
 - [fileicon (another replacment for setfileicon)](https://github.com/mklement0/fileicon)
