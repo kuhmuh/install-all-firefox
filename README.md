@@ -89,7 +89,7 @@ $ ./firefoxes.sh "all" "en-GB" "no_prompt" "/Users/myhomedir/Applications/"
 From a terminal prompt, enter the following:
 
 ```bash
-curl -L -O https://github.com/boretom/install-all-firefox/raw/master/firefoxes.sh
+curl -L -O https://github.com/kuhmuh/install-all-firefox/raw/master/firefoxes.sh
 chmod +x firefoxes.sh
 ./firefoxes.sh [version] [locale] [no_prompt] [install_directory]
 ```
@@ -100,20 +100,10 @@ It'll take a little while to grab the `.dmg` files, but it should only need to d
 
 ---
 
-### Checklist when adding a new version
-New versions DMGs are fetched from Mozilla, the only thing is to generating a new `fx[version].png` in the `bits` directory.
-
-1. Generate a new version icon:
-
+Prerequisite Software
 ```bash
-cd bits
-./create_firefox_image_with_version "80.0" fx80.png
-```
-
-`create_firefox_image_with_version` uses ImageMagick's `convert` utility to composite the two base images together with text, so make sure you've got that installed first:
-
-```bash
-$ brew install imagemagick gs
+brew install imagemagick gs
+brew install https://raw.githubusercontent.com/mklement0/fileicon/master/fileicon.rb
 ```
 
 ---

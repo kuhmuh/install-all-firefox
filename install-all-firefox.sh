@@ -299,17 +299,11 @@ get_bits(){
             fi
         fi
     fi
-    if [[ ! -f "${short_name}.icns" || $new_icon == "true" ]]; then
-        sips -s format icns "${short_name}.png" --out "${short_name}.icns" &> /dev/null
-    fi
     if [[ ! -f "${install_directory}{$nice_name}.app/Icon" ]]; then
         if [[ ! -f "fxfirefox-folder.png" ]]; then
             curl -C - -L --progress-bar "${bits_host}fxfirefox-folder.png" -o "fxfirefox-folder.png"
         fi
-        if [[ ! -f "fxfirefox-folder.icns" ]]; then
-            sips -s format icns "fxfirefox-folder.png" --out "fxfirefox-folder.icns" &> /dev/null
-        fi
-        ./setfileicon "fxfirefox-folder.icns" "${install_directory}"
+        fileicon set "${install_directory}" "fxfirefox-folder.png"
     fi
 }
 check_dmg(){
@@ -553,7 +547,7 @@ EOL
 fi
 
     cd "${bits_directory}"
-    ./setfileicon "${short_name}.icns" "${install_directory}/${nice_name}.app/"
+    fileicon set "${install_directory}/${nice_name}.app/" "${short_name}.png"
 }
 install_complete(){
     log "✔ Install complete!"
